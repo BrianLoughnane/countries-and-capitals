@@ -1,0 +1,30 @@
+<!-- country-list.html -->
+
+<p> {{ greeting }} </p>
+
+<table>
+	<thead>
+		<tr>
+			<th>Name</th>
+			<th>Country Code</th>
+			<th>Capital</th>
+			<th>Area in km<sup>2</sup></th>
+			<th>Population</th>
+			<th>Continent</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="country in countries" ng-click="doll.getDetails(country.countryName, country.population, country.areaInSqKm, country.capital, country.countryCode)">
+			<td>{{ country.countryName }}</td>
+			<td>{{ country.countryCode }}</td>
+			<td>{{ country.capital }}</td>
+			<td>{{ country.areaInSqKm | number }}</td>
+			<td>{{ country.population | number }}</td>
+			<td>{{ country.continentName }}</td>
+		</tr>
+	</tbody>
+</table>
+
+
+<a href="/"><span class="button">Home</span></a><br>
+<a href="#/countries/city"><span class="button" ng-click="getDetails()">(Temporary) To Details View</span></a>

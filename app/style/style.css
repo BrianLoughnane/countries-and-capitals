@@ -1,0 +1,53 @@
+/* style.css */
+
+body {
+	min-width: 1440px;
+}
+
+header {
+	text-align: center;
+	font-size: 4em;
+	border-bottom: 1px solid black;
+	padding: 15px;
+	padding-top: 30px;
+}
+
+.view-wrapper {
+	position: relative;
+	width: 45%;
+	margin: auto;
+}
+
+.view {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	text-align: center;
+}
+
+.p-home {
+	text-align: justify;
+	padding: 100px 0px;
+}
+
+a {
+	text-decoration: none;
+	display: inline-block;
+}
+
+a:visited {
+	color: inherit;
+}
+
+.button {
+	border: 1px solid black;
+	border-radius: 5px;
+	padding: 12px 80px;
+	display: inline-block;
+}
+
+.button:hover {
+	background: deepskyblue;
+}
