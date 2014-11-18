@@ -11,7 +11,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="country in countries" ng-click="current.getDetails(country.countryName, country.population, country.areaInSqKm, country.capital, country.countryCode)">
+		<tr ng-repeat="country in countries" ng-click="current.getDetails(country.countryName, country.population, country.areaInSqKm, country.capital, country.countryCode)" ng-class-even="'shaded'">
 			<td>{{ country.countryName }}</td>
 			<td>{{ country.countryCode }}</td>
 			<td>{{ country.capital }}</td>
@@ -23,5 +23,4 @@
 </table>
 
 
-<a href="/"><span class="button">Home</span></a><br>
-<a href="#/countries/city"><span class="button" ng-click="getDetails()">(Temporary) To Details View</span></a>
+<a href="/"><span class="button">Home</span></a>

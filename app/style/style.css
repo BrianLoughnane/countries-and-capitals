@@ -14,8 +14,6 @@ header {
 
 .view-wrapper {
 	position: relative;
-	width: 45%;
-	margin: auto;
 }
 
 .view {
@@ -25,6 +23,12 @@ header {
 	bottom: 0;
 	left: 0;
 	text-align: center;
+	min-height: 100%;
+}
+
+.homeView {
+	width: 45%;
+	margin: auto;
 }
 
 .p-home {
@@ -42,12 +46,115 @@ a:visited {
 }
 
 .button {
-	border: 1px solid black;
-	border-radius: 5px;
+	border: 3px solid yellowgreen;
+	color: yellowgreen;
 	padding: 12px 80px;
 	display: inline-block;
+	margin: -3px;
+	margin-top: 12px;
+	font-weight: bold;
 }
 
 .button:hover {
-	background: deepskyblue;
+	background: yellowgreen;
+	color: white;
 }
+
+table {
+	/*min-width: 900px;*/
+	width: 70%;
+	margin: auto;
+	margin-top: 30px;
+	display: block;
+	height: 500px;
+	overflow: scroll;
+	border: 2px solid black;
+	border-width: 2px 0px 2px 0px;
+}
+
+tr {
+	height: 35px;
+	opacity: 0.6;
+	width: 70%;
+}
+
+td, th {
+	border: 2px solid black;
+	border-width: 0px 2px 0px 2px;
+	width: 17%;
+	min-width: 164px;
+}
+
+thead {
+	background: gray;
+}
+.shaded {
+	background: lightgray;
+}
+
+tbody tr:hover {
+	cursor: pointer;
+	opacity: 1;
+	outline: 1px dotted yellowgreen;
+}
+
+.detailsView {
+	width: 70%;
+	margin: auto;
+}
+
+.detailsView div {
+	font-size: 2em;
+}
+
+div.countryTitle {
+	font-size: 4em;
+}
+
+.detailsView div>span {
+	width: 40%;
+	display: inline-block;
+}
+.detailsView div>span:first-child {
+	text-align: right;
+}
+
+.detailsView div>span:last-child {
+	text-align: left;
+}
+
+div.neighborsDiv>span {
+	width: 40%;
+	display: inline-block;
+	vertical-align: top;
+}
+
+img {
+	width: 33%;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
