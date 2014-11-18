@@ -1,3 +1,7 @@
+ccApp.run(function($templateCache) {
+	$templateCache.put('listView.html', '<table><thead><tr><th>Name</th><th>Country Code</th><th>Capital</th><th>Area in km<sup>2</sup></th><th>Population</th><th>Continent</th></tr></thead><tbody><tr ng-repeat="country in countries" ng-click="current.getDetails(country.countryName, country.population, country.areaInSqKm, country.capital, country.countryCode)" ng-class-even="\'shaded\'"><td>{{ country.countryName }}</td><td>{{ country.countryCode }}</td><td>{{ country.capital }}</td><td>{{ country.areaInSqKm | number }}</td><td>{{ country.population | number }}</td><td>{{ country.continentName }}</td></tr></tbody></table><a href="/"><span class="button">Home</span></a>'); // end templateCache.put()
+}); // end run 
+
 ccApp.factory('current', function($location, getNeighbors, getCapInfo) {
 	var current = {
 		getDetails: function(country, pop, area, cap, code) {
