@@ -12,11 +12,7 @@ ccApp.config(['$routeProvider',
 ccApp.controller('CountryDetailsCtrl', 
 	['$scope', 'current',
 		function($scope, current) {
-			$scope.greeting = "Hello Country Details";
-
 			$scope.details = current;
-
-
 		}
 	]
 );

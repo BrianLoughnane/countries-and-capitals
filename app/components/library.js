@@ -1,3 +1,24 @@
+ccApp.factory('current', function($location, getNeighbors, getCapInfo) {
+	var current = {
+		getDetails: function(country, pop, area, cap, code) {
+				current.country = country;
+				current.population = pop;
+				current.area = area;
+				current.capital = cap;
+				current.countryCode = code;
+				getCapInfo(country, cap, code).then(function(r) {
+					return current.capitalPopulation = r;
+				});
+				getNeighbors(code).then(function(r) {
+					return current.neighbors = r;
+				});
+				$location.url('/countries/city'); 
+		}
+	}
+
+	return current;
+});
+
 ccApp.factory('getCountryInfo', 
 	['$http',
 		function($http) {
@@ -13,66 +34,25 @@ ccApp.factory('getCountryInfo',
 					for (var i = 0; i < data.geonames.length; i++) {
 						countries.push(data.geonames[i]);
 					}
-
-					console.log(data.geonames[0]);
 				})
 				.error(function(error) {
 					console.log(error);
 				})
 
-			return function() {
-				return countries;
-			}			
+			return countries;			
 		}
 	]
 );
 
-ccApp.factory('current', function($location, getNeighbors, getCapInfo) {
-	var current = {
-		// getDetails: function(country, pop, area, cap, code) {
-		// 	// set "current" service values
-		// 		current.country = country;
-		// 		current.population = pop;
-		// 		current.area = area;
-		// 		current.capital = cap;
-		// 		current.countryCode = code;
-
-		// 	// take user to detail view
-		// 		$location.url('/countries/city'); 
-				
-		// 	// Make capital population call and display data
-		// 		getCapInfo(country, cap, code);
-		// 		current.neighbors = getNeighbors(code);
-		// 	// Make neighbors poplulation call and display data
-
-		// }
-		getDetails: function(country, pop, area, cap, code) {
-			// set "current" service values
-				current.country = country;
-				current.population = pop;
-				current.area = area;
-				current.capital = cap;
-				current.countryCode = code;
-
-			// take user to detail view
-				$location.url('/countries/city'); 
-				
-			// Make capital population call and display data
-				getCapInfo(country, cap, code);
-				current.neighbors = getNeighbors(code);
-			// Make neighbors poplulation call and display data
-
-		}
-	}
-
-	return current;
-});
-
-ccApp.factory('getCapInfo', function ($http) {
+ccApp.factory('getCapInfo', function ($http, $q) {
 
 
 	return function (country, capital, countryCode) {
+		var defer = $q.defer();
+
 		var query = capital + ', ' + country;
+
+		var capitalPopulation;
 
 		var config = {
 			url: 'http://api.geonames.org/search?',
@@ -90,51 +70,60 @@ ccApp.factory('getCapInfo', function ($http) {
 
 		$http(config)
 			.success(function(r) {
-				console.log(r);
+				var arr = r.geonames;
+				for (var i = 0; i < arr.length; i++) {
+					var fcode = arr[i].fcodeName;
+					var trim = fcode.trim();
+					console.log(trim);
+					if(trim == 'capital of a political entity') {
+						console.log('truth be told');
+						capitalPopulation = arr[i].population;
+						console.log('capitalPopulation', capitalPopulation);
+						defer.resolve(capitalPopulation);
+					}
+				}
+				console.log('getCapInfo', arr[0]);
+				capitalPopulation = 0;
 			})
 			.error(function(e) {
 				console.log(e);
 			});	
 		
-		return undefined;
+		return defer.promise;
 
 	}
 	
 
 });
 
-ccApp.factory('getNeighbors', function($http) {
+ccApp.factory('getNeighbors', function($http, $q) {
 
 	return function(code) {
-		var neighbors = [];
-
+		var defer = $q.defer();
 		var config = {
 			url: "http://api.geonames.org/neighboursJSON?username=devbrian1&country=" + code,
 			method: "GET",
 			params: {
 				username: 'devbrian1',
 				method: 'GET'
-				// ,
-				// type: 'json',
-				// country: code
 			}
 		}
 
 		$http(config)
 			.success(function(r) {
+				var neighbors = [];
 				var n = r.geonames;
-
 				for(var i = 0; i< n.length; i++) {
 					neighbors.push(n[i].countryName);
 				}
-				console.log('getNeighbors',r);
-				console.log('neighbors', n);
+				defer.resolve(neighbors);
+
 			})
 			.error(function(e) {
 				console.log(e);
 			});
 
-		return neighbors;
+		return defer.promise;
 	}
 
 });

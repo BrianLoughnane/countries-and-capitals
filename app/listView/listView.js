@@ -8,13 +8,10 @@ ccApp.config(['$routeProvider', function($routeProvider) {
 }]);
 
 ccApp.controller('CountryListCtrl', 
-	['$scope', '$location', 'getCountryInfo', 'current', 'getCapInfo', 'getNeighbors',
-		function($scope, $location, getCountryInfo, current, getCapInfo, getNeighbors) {
-			$scope.countries = getCountryInfo();
-
-			$scope.doll = current;
-
-			
+	['$scope', 'getCountryInfo', 'current',
+		function($scope, getCountryInfo, current) {
+			$scope.countries = getCountryInfo;
+			$scope.current = current;
 		}
 	]
 );

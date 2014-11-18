@@ -1,12 +1,9 @@
 <!-- country-details.html -->
-
-<p> {{ greeting }} </p>
-
 <div><span>{{ details.country }}</span></div>
-<div><span>Population of Country:</span><span>{{ details.population | number }}</span></div>
-<div><span>Area:</span><span>{{ details.area | number }}</span></div>
-<div><span>Capital:</span><span>{{ details.capital }}</span></div>
-<div><span>Population of Capital:</span><span>{{ capitalPopulation | number }}</span></div>
-<div><span>{{ details.neighbors.length }} Neighbors:</span><span ng-repeat="n in details.neighbors">{{ n }}, </span></div>
+<div><span>Population of Country: </span><span>{{ details.population | number }}</span></div>
+<div><span>Area: </span><span>{{ details.area | number }}</span></div>
+<div><span>Capital: </span><span>{{ details.capital }}</span></div>
+<div><span>Population of Capital: </span><span>{{ details.capitalPopulation | number }}</span></div>
+<div><span>{{ details.neighbors.length }} Neighbors: </span><span ng-repeat="n in details.neighbors">{{ n }}<span ng-if="$index != details.neighbors.length-1">,</span> </span></div>
 <a href="/"><span class="button">Home</span></a><br>
 <a href="#/countries"><span class="button">Browse Countries</span></a>
