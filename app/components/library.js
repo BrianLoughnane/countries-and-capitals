@@ -16,6 +16,7 @@ ccApp.factory('current',
 						current.area = area;
 						current.capital = cap;
 						current.countryCode = code;
+
 						getCapInfo(country, cap, code).then(function(r) {
 							return current.capitalPopulation = r;
 						});
@@ -23,7 +24,8 @@ ccApp.factory('current',
 							return current.neighbors = r;
 						});
 						$location.url('/countries/city'); 
-				}
+				},
+				needsLoad: true
 			}
 
 			return current;

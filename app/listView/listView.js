@@ -12,11 +12,18 @@ ccApp.config(
 );
 
 ccApp.controller('CountryListCtrl', 
-	['getCountryInfo', 'current',
-		function(getCountryInfo, current) {
+	['getCountryInfo', 'current', '$timeout',
+		function(getCountryInfo, current, $timeout) {
 			var cl = this;
 			cl.countries = getCountryInfo;
 			cl.current = current;
+			if(cl.current.needsLoad) {
+				cl.loading = true;
+				$timeout(function() {
+					cl.loading = false;
+					cl.current.needsLoad = false;
+				}, 1500);	
+			}
 		}
 	]
 );

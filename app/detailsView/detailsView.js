@@ -7,12 +7,6 @@ ccApp.config(
 				.when('/countries/:city', {
 					templateUrl: "./detailsView/detailsView.html",
 					controller: "CountryDetailsCtrl as cd"
-					// ,
-					// resolve: {
-					// 	cityParam: function(current) {
-					// 		return current.capital;
-					// 	}
-					// }
 				});
 		}
 	]
@@ -23,7 +17,6 @@ ccApp.controller('CountryDetailsCtrl',
 		function(current) {
 			var cd = this;
 			cd.details = current;
-			// cd.city = cityParam;
 		}
 	]
 );

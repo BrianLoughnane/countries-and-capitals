@@ -1,5 +1,5 @@
 <!-- country-details.html -->
-<div class='detailsView'>
+<div class='detailsView container' ng-class="{visible: true}">
 	<div class="countryTitle">{{ cd.details.country }}</div>
 	<div>
 		<span>Population of Country: </span>
@@ -23,7 +23,7 @@
 			<span ng-repeat="n in cd.details.neighbors">{{ n }}<span ng-if="$index != cd.details.neighbors.length-1">, </span></span>
 		</span> 
 	</div>
-	<div>
+	<div class="imageContainer">
 		<img ng-src="http://www.geonames.org/flags/x/{{ cd.details.countryCode.toLowerCase() }}.gif">
 		<img ng-src="http://www.geonames.org/img/country/250/{{ cd.details.countryCode }}.png">
 	</div>
