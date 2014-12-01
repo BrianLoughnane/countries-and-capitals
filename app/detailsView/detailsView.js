@@ -6,17 +6,28 @@ ccApp.config(
 			$routeProvider
 				.when('/countries/:city', {
 					templateUrl: "./detailsView/detailsView.html",
-					controller: "CountryDetailsCtrl as cd"
+					controller: "CountryDetailsCtrl as cd",
+					resolve: {
+						newCode: ['$route',
+							function($route) {
+								var code = $route.current.params.city;
+								return code;
+							}]
+					}
 				});
 		}
 	]
 );
 
 ccApp.controller('CountryDetailsCtrl', 
-	['current',
-		function(current) {
+	['newCode', 'countryAndCap',
+		function(newCode, countryAndCap) {
 			var cd = this;
-			cd.details = current;
+
+			countryAndCap(newCode)
+				.then(function(r) {
+					cd.details = r;
+				});
 		}
 	]
 );

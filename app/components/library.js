@@ -1,43 +1,54 @@
 ccApp.run(
 	['$templateCache', 
 		function($templateCache) {
-			$templateCache.put('listView.html', '<table><thead><tr><th>Name</th><th>Country Code</th><th>Capital</th><th>Area in km<sup>2</sup></th><th>Population</th><th>Continent</th></tr></thead><tbody><tr ng-repeat="country in countries" ng-click="current.getDetails(country.countryName, country.population, country.areaInSqKm, country.capital, country.countryCode)" ng-class-even="\'shaded\'"><td>{{ country.countryName }}</td><td>{{ country.countryCode }}</td><td>{{ country.capital }}</td><td>{{ country.areaInSqKm | number }}</td><td>{{ country.population | number }}</td><td>{{ country.continentName }}</td></tr></tbody></table><a href="/"><span class="button">Home</span></a>'); // end templateCache.put()
+			$templateCache.put('listView.html', 
+				'<div class="loading" ng-if="cl.loading">
+					<img src="images/loading.gif">
+				</div>
+				<div class="container" ng-class="{visible: !cl.loading}">
+					<table>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Country Code</th>
+								<th>Capital</th>
+								<th>Area in km<sup>2</sup></th>
+								<th>Population</th>
+								<th>Continent</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="country in cl.countries" ng-click="cl.goTo(country.countryCode)"  ng-class-even="\'shaded\'">
+								<td>{{ country.countryName }}</td>
+								<td>{{ country.countryCode }}</td>
+								<td>{{ country.capital }}</td>
+								<td>{{ country.areaInSqKm | number }}</td>
+								<td>{{ country.population | number }}</td>
+								<td>{{ country.continentName }}</td>
+							</tr>
+						</tbody>
+					</table>
+
+
+					<a href="/#/"><span class="button">Home</span></a>
+				</div>'
+			); // end templateCache.put()
+		} // end function
+	] // end array
+); // end run method
+
+ccApp.factory('listLoaded', 
+	function() {
+		return {
+			loaded: false
 		}
-	]
-); // end run 
-
-ccApp.factory('current', 
-	['$location', 'getNeighbors', 'getCapInfo', 
-		function($location, getNeighbors, getCapInfo) {
-			var current = {
-				getDetails: function(country, pop, area, cap, code) {
-						current.country = country;
-						current.population = pop;
-						current.area = area;
-						current.capital = cap;
-						current.countryCode = code;
-
-						getCapInfo(country, cap, code).then(function(r) {
-							return current.capitalPopulation = r;
-						});
-						getNeighbors(code).then(function(r) {
-							return current.neighbors = r;
-						});
-						$location.url('/countries/city'); 
-				},
-				needsLoad: true
-			}
-
-			return current;
-		}
-	]
+	}
 );
 
 ccApp.factory('getCountryInfo', 
-	['$http',
-		function($http) {
-			var countries = [];
-
+	['$http', '$q',
+		function($http, $q) {
+			var defer = $q.defer();
 			var config = {
 				url: 'http://api.geonames.org/countryInfo?&username=devbrian1&type=json',
 				method: 'GET'
@@ -45,15 +56,13 @@ ccApp.factory('getCountryInfo',
 
 			$http(config)
 				.success(function(data) {
-					for (var i = 0; i < data.geonames.length; i++) {
-						countries.push(data.geonames[i]);
-					}
+					defer.resolve(data.geonames);
 				})
 				.error(function(error) {
 					console.log(error);
-				})
+				});
 
-			return countries;			
+			return defer.promise;			
 		}
 	]
 );
@@ -113,11 +122,7 @@ ccApp.factory('getNeighbors',
 				var defer = $q.defer();
 				var config = {
 					url: "http://api.geonames.org/neighboursJSON?username=devbrian1&country=" + code,
-					method: "GET",
-					params: {
-						username: 'devbrian1',
-						method: 'GET'
-					}
+					method: "GET"
 				}
 
 				$http(config)
@@ -139,6 +144,61 @@ ccApp.factory('getNeighbors',
 		}
 	]
 );
+
+ccApp.factory('countryAndCap', 
+	['getCountryInfo', 'getCapInfo', '$q', 'getNeighbors',
+		function(getCountryInfo, getCapInfo, $q, getNeighbors) {
+			return function(selectedCountryCode) {
+				var country, neighbors, population, area, capital, countryCode, capitalPopulation;
+				var defer = $q.defer();
+
+				getCountryInfo
+					.then(function(r) {
+						for(var i = 0; i < r.length; i++) {
+							if(r[i].countryCode == selectedCountryCode) {	
+								country = r[i].countryName;
+								capital = r[i].capital;
+								countryCode = r[i].countryCode;
+								area = r[i].areaInSqKm;
+								population = r[i].population;
+							}
+						}
+
+						return {
+							country: country,
+							capital: capital,
+							countryCode: countryCode
+						}
+					})
+					.then(function(r) {
+						getCapInfo(r.country, r.capital, r.countryCode)
+							.then(function(r) {
+								capitalPopulation = r;
+
+								getNeighbors(countryCode)
+									.then(function(r) {
+										neighbors = r;
+
+										defer.resolve({
+											country: country,
+											capital: capital,
+											countryCode: countryCode,
+											population: population,
+											capitalPopulation: capitalPopulation,
+											area: area,
+											neighbors: neighbors
+										});				
+									});
+							});
+					});
+				
+				return defer.promise;
+			} 
+		}
+	]
+);	
+
+
 
 
 
