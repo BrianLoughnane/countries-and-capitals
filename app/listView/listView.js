@@ -19,16 +19,9 @@ ccApp.controller('CountryListCtrl',
 
 			getCountryInfo.then(function(r) {
 				cl.countries = r;
+				cl.listLoaded.loaded = true;
 			});
-
 			
-			if(!cl.listLoaded.loaded) {
-				cl.loading = true;
-				$timeout(function() {
-					cl.loading = false;
-					cl.listLoaded.loaded = true;
-				}, 1500);	
-			}
 
 			cl.goTo = function(code) {
 				$location.path('/countries/' + code);

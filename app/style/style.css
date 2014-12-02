@@ -1,7 +1,7 @@
 /* style.css */
 
 html, body {
-	height: 100%;
+	min-height: 140%;
 }
 
 body {
@@ -63,6 +63,7 @@ header {
 	text-align: center;
 	z-index: 10;
 	opacity: 0.8;
+	min-height: 140%
 }
 
 .homeView {
@@ -176,6 +177,15 @@ div.neighborsDiv>span {
 	width: 40%;
 	display: inline-block;
 	vertical-align: top;
+}
+
+.neighborSpan {
+	color: yellowgreen;
+}
+
+.neighborSpan:hover {
+	cursor: pointer;
+	font-weight: bold;
 }
 
 img {

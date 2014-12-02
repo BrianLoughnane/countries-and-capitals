@@ -1,46 +1,47 @@
-ccApp.run(
-	['$templateCache', 
-		function($templateCache) {
-			$templateCache.put('listView.html', 
-				'<div class="loading" ng-if="cl.loading">
-					<img src="images/loading.gif">
-				</div>
-				<div class="container" ng-class="{visible: !cl.loading}">
-					<table>
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Country Code</th>
-								<th>Capital</th>
-								<th>Area in km<sup>2</sup></th>
-								<th>Population</th>
-								<th>Continent</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr ng-repeat="country in cl.countries" ng-click="cl.goTo(country.countryCode)"  ng-class-even="\'shaded\'">
-								<td>{{ country.countryName }}</td>
-								<td>{{ country.countryCode }}</td>
-								<td>{{ country.capital }}</td>
-								<td>{{ country.areaInSqKm | number }}</td>
-								<td>{{ country.population | number }}</td>
-								<td>{{ country.continentName }}</td>
-							</tr>
-						</tbody>
-					</table>
+// ccApp.run(
+// 	['$templateCache', 
+// 		function($templateCache) {
+// 			$templateCache.put('listView.html', 
+// 				'<div class="loading" ng-if="cl.loading">
+// 					<img src="images/loading.gif">
+// 				</div>
+// 				<div class="container" ng-class="{visible: !cl.loading}">
+// 					<table>
+// 						<thead>
+// 							<tr>
+// 								<th>Name</th>
+// 								<th>Country Code</th>
+// 								<th>Capital</th>
+// 								<th>Area in km<sup>2</sup></th>
+// 								<th>Population</th>
+// 								<th>Continent</th>
+// 							</tr>
+// 						</thead>
+// 						<tbody>
+// 							<tr ng-repeat="country in cl.countries" ng-click="cl.goTo(country.countryCode)"  ng-class-even="\'shaded\'">
+// 								<td>{{ country.countryName }}</td>
+// 								<td>{{ country.countryCode }}</td>
+// 								<td>{{ country.capital }}</td>
+// 								<td>{{ country.areaInSqKm | number }}</td>
+// 								<td>{{ country.population | number }}</td>
+// 								<td>{{ country.continentName }}</td>
+// 							</tr>
+// 						</tbody>
+// 					</table>
 
 
-					<a href="/#/"><span class="button">Home</span></a>
-				</div>'
-			); // end templateCache.put()
-		} // end function
-	] // end array
-); // end run method
+// 					<a href="/#/"><span class="button">Home</span></a>
+// 				</div>'
+// 			); // end templateCache.put()
+// 		} // end function
+// 	] // end array
+// ); // end run method
 
 ccApp.factory('listLoaded', 
 	function() {
 		return {
-			loaded: false
+			loaded: false,
+			isCached: false
 		}
 	}
 );
@@ -51,7 +52,8 @@ ccApp.factory('getCountryInfo',
 			var defer = $q.defer();
 			var config = {
 				url: 'http://api.geonames.org/countryInfo?&username=devbrian1&type=json',
-				method: 'GET'
+				method: 'GET',
+				cache: true
 			}
 
 			$http(config)
@@ -127,12 +129,17 @@ ccApp.factory('getNeighbors',
 
 				$http(config)
 					.success(function(r) {
-						var neighbors = [];
-						var n = r.geonames;
-						for(var i = 0; i< n.length; i++) {
-							neighbors.push(n[i].countryName);
+						var neighbors = {};
+
+						if(r.geonames != void 0) {
+							for(var i = 0; i< r.geonames.length; i++) {
+								neighbors[r.geonames[i].countryCode] = r.geonames[i].countryName;
+							}
+							defer.resolve(neighbors);	
+						} else {
+							defer.resolve({});
 						}
-						defer.resolve(neighbors);
+						
 
 					})
 					.error(function(e) {
@@ -149,7 +156,7 @@ ccApp.factory('countryAndCap',
 	['getCountryInfo', 'getCapInfo', '$q', 'getNeighbors',
 		function(getCountryInfo, getCapInfo, $q, getNeighbors) {
 			return function(selectedCountryCode) {
-				var country, neighbors, population, area, capital, countryCode, capitalPopulation;
+				var country, neighbors, numberOfNeighbors, population, area, capital, countryCode, capitalPopulation;
 				var defer = $q.defer();
 
 				getCountryInfo
@@ -178,6 +185,7 @@ ccApp.factory('countryAndCap',
 								getNeighbors(countryCode)
 									.then(function(r) {
 										neighbors = r;
+										numberOfNeighbors = Object.getOwnPropertyNames(r).length;
 
 										defer.resolve({
 											country: country,
@@ -186,7 +194,8 @@ ccApp.factory('countryAndCap',
 											population: population,
 											capitalPopulation: capitalPopulation,
 											area: area,
-											neighbors: neighbors
+											neighbors: neighbors,
+											numberOfNeighbors: numberOfNeighbors
 										});				
 									});
 							});

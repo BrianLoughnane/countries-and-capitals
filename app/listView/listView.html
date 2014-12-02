@@ -1,8 +1,8 @@
 <!-- country-list.html -->
-<div class="loading" ng-if="cl.loading">
+<div class="loading" ng-if="!cl.listLoaded.loaded">
 	<img src="images/loading.gif">
 </div>
-<div class="container" ng-class="{visible: !cl.loading}">
+<div class="container" ng-class="{visible: cl.listLoaded.loaded}">
 	<table>
 		<thead>
 			<tr>
