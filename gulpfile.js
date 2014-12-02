@@ -17,6 +17,10 @@ gulp.task('copy-html-files', function() {
 	  .pipe(gulp.dest('build/'));
 });
 
+gulp.task('move-images', function() {
+	gulp.src('./app/**/*.gif')
+		.pipe(gulp.dest('build/'));
+})
 
 gulp.task('usemin', function() {
 	gulp.src('./app/index.html')
@@ -26,9 +30,6 @@ gulp.task('usemin', function() {
 	  }))
 	  .pipe(gulp.dest('build/'));
 });
-
-
-
 
 gulp.task('connect', function() {
 	connect.server({
@@ -44,5 +45,5 @@ gulp.task('min', function() {
 });
 
 gulp.task('default', ['connect']);
-gulp.task('build', ['copy-html-files', 'usemin']);
+gulp.task('build', ['copy-html-files', 'move-images', 'usemin']);
 

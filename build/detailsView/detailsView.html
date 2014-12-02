@@ -1,12 +1,16 @@
 <!-- country-details.html -->
-<div class='detailsView'>
+<div class="loading" ng-if="!cd.detailsLoaded">
+<!-- <div class="loading" ng-if="true"> -->
+	<img src="images/loading.gif">
+</div>
+<div class="container detailsView" ng-class="{visible: cd.detailsLoaded}">
 	<div class="countryTitle">{{ cd.details.country }}</div>
 	<div>
 		<span>Population of Country: </span>
 		<span>{{ cd.details.population | number }}</span>
 	</div>
 	<div>
-		<span>Area: </span>
+		<span>Area in km<sup>2</sup>: </span>
 		<span>{{ cd.details.area | number }}</span>
 	</div>
 	<div>
@@ -18,12 +22,12 @@
 		<span>{{ cd.details.capitalPopulation | number }}</span>
 	</div>
 	<div class="neighborsDiv">
-		<span>{{ cd.details.neighbors.length }} Neighbors: </span>
+		<span>{{ cd.details.numberOfNeighbors }} Neighbors: </span>
 		<span>
-			<span ng-repeat="n in cd.details.neighbors">{{ n }}<span ng-if="$index != cd.details.neighbors.length-1">, </span></span>
+			<span ng-repeat="(code, country) in cd.details.neighbors" ng-click="cd.goTo(code)" class="neighborSpan">{{ country }}<span ng-if="$index != cd.details.numberOfNeighbors-1">, </span></span>
 		</span> 
 	</div>
-	<div>
+	<div class="imageContainer">
 		<img ng-src="http://www.geonames.org/flags/x/{{ cd.details.countryCode.toLowerCase() }}.gif">
 		<img ng-src="http://www.geonames.org/img/country/250/{{ cd.details.countryCode }}.png">
 	</div>
