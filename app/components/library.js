@@ -123,7 +123,7 @@ ccApp.factory('getNeighbors',
 			return function(code) {
 				var defer = $q.defer();
 				var config = {
-					url: "http://api.geonames.org/neighboursJSON?username=devbrian1&country=" + code,
+					url: "username=devbrian1&country=" + code,
 					method: "GET"
 				}
 
