@@ -10,7 +10,10 @@ var rev = require('gulp-rev');
 var clean = require('gulp-clean');
 
 
-
+gulp.task('clean', function() {
+	gulp.src('./build')
+		.pipe(clean());
+});
 
 gulp.task('copy-html-files', function() {
 	gulp.src(['./app/**/*.html', '!./app/index.html'], {base: 'app/'})
@@ -25,8 +28,10 @@ gulp.task('move-images', function() {
 gulp.task('usemin', function() {
 	gulp.src('./app/index.html')
 	  .pipe(usemin({
+	  	// insert vendor prefixes
 		css: [minifyCss(), rev()],
-		js: [uglify(), rev()]	
+		// js: [ngAnnotate(), uglify()] gulp-ng-annotate  --> like ng min --> reads controllers, adds in the minification arrays
+		js: [uglify(), rev()]
 	  }))
 	  .pipe(gulp.dest('build/'));
 });
@@ -37,7 +42,7 @@ gulp.task('connect', function() {
 	})
 });
 
-gulp.task('min', function() {
+gulp.task('connectMin', function() {
 	connect.server({
 		root: 'build',
 		port: '8888'	
@@ -45,5 +50,5 @@ gulp.task('min', function() {
 });
 
 gulp.task('default', ['connect']);
-gulp.task('build', ['copy-html-files', 'move-images', 'usemin']);
+gulp.task('build', ['clean', 'copy-html-files', 'move-images', 'usemin']);
 
