@@ -11,12 +11,13 @@ var clean = require('gulp-clean');
 
 
 gulp.task('clean', function() {
-	gulp.src('./build')
+	gulp.src(['./build'])
 		.pipe(clean());
 });
 
 gulp.task('copy-html-files', function() {
-	gulp.src(['./app/**/*.html', '!./app/index.html'], {base: 'app/'})
+	// gulp.src(['./app/**/*.html', '!./app/index.html'], {base: 'app/'})
+	gulp.src(['./app/**/*.html'])
 	  .pipe(gulp.dest('build/'));
 });
 
@@ -50,5 +51,5 @@ gulp.task('connectMin', function() {
 });
 
 gulp.task('default', ['connect']);
-gulp.task('build', ['clean', 'copy-html-files', 'move-images', 'usemin']);
+gulp.task('build', ['copy-html-files', 'move-images', 'usemin']);
 
