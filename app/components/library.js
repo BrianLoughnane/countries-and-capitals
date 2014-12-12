@@ -92,19 +92,23 @@ ccApp.factory('getCapInfo',
 
 				$http(config)
 					.success(function(r) {
+						
 						var arr = r.geonames;
+						
 						for (var i = 0; i < arr.length; i++) {
 							var fcode = arr[i].fcodeName;
 							var trim = fcode.trim();
-							console.log(trim);
+							// console.log(trim);
 							if(trim == 'capital of a political entity') {
-								console.log('truth be told');
+								//console.log('truth be told');
 								capitalPopulation = arr[i].population;
-								console.log('capitalPopulation', capitalPopulation);
+								//console.log('capitalPopulation', capitalPopulation);
 								defer.resolve(capitalPopulation);
 							}
 						}
-						console.log('getCapInfo', arr[0]);
+
+						// console.log('getCapInfo', arr[0]);
+						
 						capitalPopulation = 0;
 					})
 					.error(function(e) {
@@ -123,7 +127,7 @@ ccApp.factory('getNeighbors',
 			return function(code) {
 				var defer = $q.defer();
 				var config = {
-					url: "username=devbrian1&country=" + code,
+					url: "http://api.geonames.org/neighboursJSON?username=devbrian1&country=" + code,
 					method: "GET"
 				}
 

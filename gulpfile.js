@@ -31,7 +31,6 @@ gulp.task('usemin', function() {
 	  .pipe(usemin({
 	  	// insert vendor prefixes
 		css: [minifyCss(), rev()],
-		// js: [ngAnnotate(), uglify()] gulp-ng-annotate  --> like ng min --> reads controllers, adds in the minification arrays
 		js: [uglify(), rev()]
 	  }))
 	  .pipe(gulp.dest('build/'));
